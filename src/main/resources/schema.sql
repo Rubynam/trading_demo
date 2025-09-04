@@ -43,6 +43,16 @@ INSERT INTO CRYPTO_PAIR (base_currency, quote_currency)
 VALUES ('ETH', 'USDT'), ('BTC', 'USDT');
 
 
+CREATE TABLE BEST_PRICING (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  symbol VARCHAR(10) NOT NULL,
+  bid_price DECIMAL(18,8) NOT NULL,
+  ask_price DECIMAL(18,8) NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
 
 
 

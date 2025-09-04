@@ -1,4 +1,4 @@
-package org.trading.domain.entities;
+package org.trading.insfrastructure.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

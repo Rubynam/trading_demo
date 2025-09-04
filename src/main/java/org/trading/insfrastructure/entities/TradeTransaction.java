@@ -1,4 +1,4 @@
-package org.trading.domain.entities;
+package org.trading.insfrastructure.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.trading.domain.enumeration.TradeSide;
+import org.trading.insfrastructure.enumeration.TradeSide;
 
 @Entity
 @Table(name = "TRADE_TRANSACTION")
