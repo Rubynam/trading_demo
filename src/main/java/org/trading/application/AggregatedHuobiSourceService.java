@@ -26,7 +26,7 @@ public class AggregatedHuobiSourceService implements AggregationService {
     HuobiData prices = restTemplate.getForObject(huobiUrl, HuobiData.class);
     if(prices == null) throw new Exception("Invalid data");
 
-    log.info("Huobi source Prices: {}", prices);
+    log.debug("Huobi source url {} Prices: {}",huobiUrl, prices);
     return prices.getData().stream().map(transformer::transform).toList();
 
   }

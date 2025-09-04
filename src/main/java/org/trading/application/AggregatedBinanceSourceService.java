@@ -1,10 +1,12 @@
 package org.trading.application;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.trading.application.port.BinanceDataTransformer;
@@ -24,10 +26,19 @@ public class AggregatedBinanceSourceService implements AggregationService {
 
   @Override
   public List<AggregationPrice> aggregate() throws Exception {
-    List<BinanceData> prices = restTemplate.getForObject(binanceUrl, List.class, BinanceData.class);
-    if(prices == null) throw new Exception("Invalid data");
-    log.info("Binance source Prices: {}", prices);
-    return prices.stream().map(transformer::transform).toList();
+    var responseEntity = restTemplate.exchange(
+        binanceUrl,
+        HttpMethod.GET,
+        null,
+        new ParameterizedTypeReference<List<BinanceData>>() {}
+    );
+    List<BinanceData> prices = responseEntity.getBody();
 
+    if(prices == null) throw new Exception("Invalid data");
+    log.debug("Binance source url {} Prices: {}",binanceUrl, prices);
+    List<AggregationPrice> result = new LinkedList<>();
+
+    prices.forEach(price -> result.add(transformer.transform(price)));
+    return result;
   }
 }
