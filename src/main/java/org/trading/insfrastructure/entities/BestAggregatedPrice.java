@@ -24,7 +24,7 @@ public class BestAggregatedPrice {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "symbol", nullable = false, length = 10)
+  @Column(name = "symbol", nullable = false)
   private String symbol;
 
   @Column(name = "bid_price", nullable = false, precision = 18, scale = 8)
@@ -34,6 +34,6 @@ public class BestAggregatedPrice {
   private BigDecimal askPrice;
 
   @Column(name = "timestamp", nullable = false)
-  private LocalDateTime timestamp;
+  private LocalDateTime timestamp = LocalDateTime.now();
 
 }

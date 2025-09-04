@@ -1,5 +1,6 @@
 package org.trading.presentation.scheduler;
 
+import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.insfrastructure.constant.AggregatedSource;
 import org.trading.presentation.command.AggregatedPriceCommand;
+import org.trading.presentation.command.AggregatedPriceStoreCommand;
 
 @Component
 @RequiredArgsConstructor
@@ -15,15 +17,17 @@ import org.trading.presentation.command.AggregatedPriceCommand;
 public class PriceAggregationScheduler {
 
   private final AggregatedPriceCommand command;
+  private final AggregatedPriceStoreCommand storeCommand;
 
   @Scheduled(fixedRateString = "${scheduler.fixed-rate}") // Every 10 seconds
   public void fetchPriceFromSource() throws Exception {
+    final List<AggregationPrice> mergedData = new LinkedList<>();
+    final List<AggregationPrice> binanceData = command.execute(AggregatedSource.Binance);
+    final List<AggregationPrice> huobiData = command.execute(AggregatedSource.Huobi);
 
-    List<AggregationPrice> binanceData = command.execute(AggregatedSource.Binance);
-    List<AggregationPrice> huobiData = command.execute(AggregatedSource.Huobi);
+    mergedData.addAll(binanceData);
+    mergedData.addAll(huobiData);
 
-    binanceData.addAll(huobiData);
-
-    //todo save
+    storeCommand.execute(mergedData);
   }
 }
