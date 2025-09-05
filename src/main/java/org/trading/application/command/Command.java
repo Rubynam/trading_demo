@@ -1,4 +1,4 @@
-package org.trading.presentation.command;
+package org.trading.application.command;
 
 public interface Command<I,O> {
 

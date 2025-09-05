@@ -16,4 +16,14 @@ public class BestAggregatedPriceTransformer implements Transformer<AggregationPr
     bestAggregatedPrice.setAskPrice(input.getAskPrice());
     return bestAggregatedPrice;
   }
+
+  @Override
+  public AggregationPrice reverseTransform(BestAggregatedPrice output)
+      throws IllegalArgumentException {
+    return AggregationPrice.builder()
+        .symbol(output.getSymbol())
+        .bidPrice(output.getBidPrice())
+        .askPrice(output.getAskPrice())
+        .build();
+  }
 }

@@ -1,3 +1,5 @@
+
+
 spring:
   datasource:
     url: jdbc:h2:mem:crypto-trading-db;DB_CLOSE_DELAY=-1
@@ -33,3 +35,5 @@ source:
     url: https://api.binance.com/api/v3/ticker/bookTicker
   huobi:
     url: https://api.huobi.pro/market/tickers
+server:
+  port: 8080

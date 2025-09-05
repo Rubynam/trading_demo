@@ -33,4 +33,10 @@ public class BinanceDataTransformer implements Transformer<BinanceData, Aggregat
         .askPrice(BigDecimal.valueOf(Double.parseDouble(input.getAskPrice())))
         .build();
   }
+
+  @Override
+  public BinanceData reverseTransform(AggregationPrice output) throws IllegalArgumentException {
+    //todo
+    return null;
+  }
 }
