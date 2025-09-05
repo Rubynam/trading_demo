@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "2052f17d-106e-4f23-ae86-1902cc18df4d",
+		"name": "Trading",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5883576"
+	},
+	"item": [
+		{
+			"name": "BestPrice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/price/best/BTCUSDT",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"price",
+						"best",
+						"BTCUSDT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Account Balance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/account/user123",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"account",
+						"user123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trade",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"symbol\": \"BTCUSDT\",\n    \"side\": \"BUY\",\n    \"quantity\": 0.001,\n    \"username\": \"user123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/trade",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"trade"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transaction history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/transaction/history/user123?page=0&size=5",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transaction",
+						"history",
+						"user123"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
