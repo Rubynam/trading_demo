@@ -16,14 +16,20 @@ public class UserWalletServiceImpl implements UserWalletService {
   private final UserWalletRepository userWalletRepository;
 
   @Override
-  public UserWallet deduct(String username, BigDecimal amount) {
-    log.info("Deducting {} from user wallet {}", amount, username);
-    return null;
+  public UserWallet deduct(UserWallet wallet, BigDecimal amount) {
+    log.info("Deducting {} from wallet {}", amount, wallet);
+    if(wallet.getBalance().compareTo(amount) >= 0) {
+      wallet.setBalance(wallet.getBalance().subtract(amount));
+      return userWalletRepository.save(wallet);
+    }
+    throw new IllegalArgumentException("Insufficient funds");
   }
 
   @Override
-  public UserWallet add(String username, BigDecimal amount) {
-    return null;
+  public UserWallet add(UserWallet username, BigDecimal amount) {
+    log.info("Adding {} to wallet {}", amount, username);
+    username.setBalance(username.getBalance().add(amount));
+    return userWalletRepository.save(username);
   }
 
   @Override
