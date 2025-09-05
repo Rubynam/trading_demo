@@ -2,6 +2,7 @@ package org.trading.presentation.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class TradeRequest {
   private String symbol;
   @NotNull(message = "side is mandatory")
   private TradeSide side;
-  @NotNull(message = "quantity is mandatory")
+  @Positive(message = "quantity must be greater than 0")
   private double quantity;
   @NotNull(message = "username is mandatory")
   private String username;
