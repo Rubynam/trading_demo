@@ -5,5 +5,5 @@ import org.trading.insfrastructure.enumeration.TradeSide;
 
 public interface TransactionService {
 
-  boolean store(String username, String symbol, BigDecimal price, int quantity, TradeSide side) throws Exception;
+  boolean store(String username, String symbol, BigDecimal price, BigDecimal quantity, TradeSide side) throws Exception;
 }

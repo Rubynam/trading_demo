@@ -15,7 +15,7 @@ public class TransactionServiceImpl implements TransactionService {
   private final TradeTransactionRepository tradeTransactionRepository;
 
   @Override
-  public boolean store(String username, String symbol, BigDecimal price, int quantity,
+  public boolean store(String username, String symbol, BigDecimal price, BigDecimal quantity,
       TradeSide side) throws Exception {
     TradeTransaction tradeTransaction = TradeTransaction.builder()
         .username(username)

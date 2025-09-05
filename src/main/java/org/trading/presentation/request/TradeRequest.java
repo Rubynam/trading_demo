@@ -16,7 +16,7 @@ public class TradeRequest {
   @NotNull(message = "side is mandatory")
   private TradeSide side;
   @NotNull(message = "quantity is mandatory")
-  private int quantity;
+  private double quantity;
   @NotNull(message = "username is mandatory")
   private String username;
   //based on the latest price, which means that user use market price

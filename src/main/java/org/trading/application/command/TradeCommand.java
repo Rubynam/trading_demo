@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.trading.constant.TransactionStatus;
 import org.trading.domain.logic.PriceService;
+import org.trading.domain.logic.SymbolValidation;
 import org.trading.domain.logic.TransactionService;
 import org.trading.domain.logic.UserWalletService;
 import org.trading.domain.logic.impl.UserBalanceValidation;
@@ -25,12 +26,14 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
   private final UserWalletService userWalletService;
   private final TransactionService transactionService;
   private final UserBalanceValidation userBalanceValidation;
+  private final SymbolValidation symbolValidation;
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public TradeResponse execute(TradeRequest input) throws Exception {
     BestPriceDto bestPriceDto = priceService.getBestPrice(input.getSymbol());
     if(bestPriceDto == null) throw new IllegalArgumentException("Invalid symbol");
+    if(!symbolValidation.validate(input.getSymbol())) throw new IllegalArgumentException("Symbol does not allow");
 
     BigDecimal bidPrice = BigDecimal.valueOf(Double.parseDouble(bestPriceDto.getBestBidPrice()));
     BigDecimal askPrice = BigDecimal.valueOf(Double.parseDouble(bestPriceDto.getBestAskPrice()));
@@ -52,7 +55,7 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
 
     log.info("Trade executed username={} side={} babalance {}",userWallet,input.getSide(),userWallet.getBalance());
     log.info("write transaction logs");
-    var isSuccess = transactionService.store(userWallet.getUsername(),input.getSymbol(),price,input.getQuantity(),input.getSide());
+    var isSuccess = transactionService.store(userWallet.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide());
 
     if(isSuccess){
       return response(TransactionStatus.SUCCESS, price, input);

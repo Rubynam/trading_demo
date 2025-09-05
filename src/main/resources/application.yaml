@@ -9,17 +9,17 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:schema.sql
+      schema-locations: classpath:/db/migration/schema.sql,classpath:/db/migration/import.sql
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      ddl-auto: none
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
   h2:
     console:
-      enabled: true
+      enabled: false
       path: /h2-console
 
 scheduler:

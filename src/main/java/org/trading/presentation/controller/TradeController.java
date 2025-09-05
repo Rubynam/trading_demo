@@ -13,7 +13,7 @@ import org.trading.presentation.request.TradeRequest;
 import org.trading.presentation.response.TradeResponse;
 
 @RestController
-@RequestMapping("/trades")
+@RequestMapping("/trade")
 @RequiredArgsConstructor
 @Validated
 public class TradeController {

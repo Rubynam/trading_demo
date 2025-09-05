@@ -38,7 +38,7 @@ public class TradeTransaction {
   private TradeSide tradeType; // BUY or SELL
 
   @Column(nullable = false, precision = 18, scale = 8)
-  private int quantity;
+  private BigDecimal quantity;
 
   @Column(nullable = false, precision = 18, scale = 8)
   private BigDecimal price;
