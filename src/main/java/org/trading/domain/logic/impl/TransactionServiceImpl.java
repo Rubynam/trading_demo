@@ -1,6 +1,7 @@
 package org.trading.domain.logic.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
         .quantity(quantity)
         .tradeType(side)
         .status(status.name())
+        .timestamp(LocalDateTime.now())
         .build();
 
     tradeTransactionRepository.save(tradeTransaction);
