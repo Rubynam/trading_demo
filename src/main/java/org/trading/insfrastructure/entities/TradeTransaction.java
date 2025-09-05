@@ -44,6 +44,9 @@ public class TradeTransaction {
   private BigDecimal price;
 
   @Column(nullable = false)
+  private String status;
+
+  @Column(nullable = false)
   private LocalDateTime timestamp = LocalDateTime.now();
 
 }

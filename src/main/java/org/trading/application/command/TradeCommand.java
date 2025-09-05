@@ -48,6 +48,7 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
 
     if(!userBalanceValidation.validate(userWallet,amount)){
       log.warn("Insufficient balance {}",userWallet);
+      transactionService.store(userWallet.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide(), TransactionStatus.FAILURE);
       return response(TransactionStatus.FAILURE,price, input);
     }
 
@@ -55,12 +56,9 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
 
     log.info("Trade executed username={} side={} babalance {}",userWallet,input.getSide(),userWallet.getBalance());
     log.info("write transaction logs");
-    var isSuccess = transactionService.store(userWallet.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide());
+    transactionService.store(userWallet.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide(), TransactionStatus.SUCCESS);
 
-    if(isSuccess){
-      return response(TransactionStatus.SUCCESS, price, input);
-    }
-    return response(TransactionStatus.FAILURE,price, input);
+    return response(TransactionStatus.SUCCESS, price, input);
   }
 
   private UserWallet executeBalance(TradeRequest input, UserWallet userWallet, BigDecimal amount) {
