@@ -22,7 +22,7 @@ public class UserWallet {
   private Long id;
 
   @Column(nullable = false)
-  private String userId;
+  private String username;
 
   @Column(nullable = false)
   private String currency;

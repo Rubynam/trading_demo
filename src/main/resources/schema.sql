@@ -6,10 +6,10 @@ CREATE TABLE APP_USER (
 
 CREATE TABLE USER_WALLET (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL ,
     currency VARCHAR(10) NOT NULL,
     balance DECIMAL(18, 8) NOT NULL,
-    UNIQUE (username, currency)
+    UNIQUE (username)
 );
 
 ALTER TABLE USER_WALLET ADD CONSTRAINT fk_user_wallet_user FOREIGN KEY (username) REFERENCES APP_USER (username) ON DELETE CASCADE;
@@ -24,8 +24,7 @@ CREATE TABLE CRYPTO_PAIR (
 CREATE TABLE TRADE_TRANSACTION (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username nvarchar(255) NOT NULL,
-    base_currency VARCHAR(10) NOT NULL,
-    quote_currency VARCHAR(10) NOT NULL,
+    symbol VARCHAR(50) NOT NULL,
     trade_type VARCHAR(10) NOT NULL, -- BUY/SELL
     quantity DECIMAL(18, 8) NOT NULL,
     price DECIMAL(18, 8) NOT NULL,

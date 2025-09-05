@@ -30,10 +30,7 @@ public class TradeTransaction {
   private User user;
 
   @Column(nullable = false)
-  private String baseCurrency;
-
-  @Column(nullable = false)
-  private String quoteCurrency;
+  private String symbol;
 
   @Column(nullable = false)
   private TradeSide tradeType; // BUY or SELL
