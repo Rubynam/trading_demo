@@ -2,6 +2,8 @@ package org.trading.domain.logic.impl;
 
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.trading.constant.TransactionStatus;
 import org.trading.domain.logic.TransactionService;
@@ -28,5 +30,10 @@ public class TransactionServiceImpl implements TransactionService {
         .build();
 
     tradeTransactionRepository.save(tradeTransaction);
+  }
+
+  @Override
+  public Page<TradeTransaction> findAllBy(String username, Pageable pageable) {
+    return tradeTransactionRepository.findAllByUsername(username,pageable);
   }
 }
