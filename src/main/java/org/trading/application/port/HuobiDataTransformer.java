@@ -3,6 +3,7 @@ package org.trading.application.port;
 import org.springframework.stereotype.Service;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.insfrastructure.mapper.HuobiData;
+import org.trading.insfrastructure.mapper.HuobiData.Tickers;
 
 @Service
 public class HuobiDataTransformer implements Transformer<HuobiData.Tickers, AggregationPrice> {
@@ -20,5 +21,11 @@ public class HuobiDataTransformer implements Transformer<HuobiData.Tickers, Aggr
         .askPrice(input.getAsk())
         .askPrice(input.getAsk())
         .build();
+  }
+
+  @Override
+  public Tickers reverseTransform(AggregationPrice output) throws IllegalArgumentException {
+    //todo
+    return null;
   }
 }

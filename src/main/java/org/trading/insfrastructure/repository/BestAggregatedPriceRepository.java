@@ -7,4 +7,5 @@ import org.trading.insfrastructure.entities.BestAggregatedPrice;
 @Repository
 public interface BestAggregatedPriceRepository extends JpaRepository<BestAggregatedPrice, Long> {
 
+  BestAggregatedPrice findTopBySymbolOrderByTimestampDesc(String symbol);
 }

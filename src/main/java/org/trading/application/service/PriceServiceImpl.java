@@ -1,4 +1,4 @@
-package org.trading.application;
+package org.trading.application.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.trading.application.port.BestAggregatedPriceTransformer;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.domain.logic.BestPriceStorage;
+import org.trading.insfrastructure.entities.BestAggregatedPrice;
+import org.trading.presentation.response.BestPriceDto;
 
 @Service
 @Slf4j
@@ -25,5 +27,19 @@ public class PriceServiceImpl implements PriceService {
       log.error("Error while storing prices",e);
       return false;
     }
+  }
+
+  @Override
+  public BestPriceDto getBestPrice(String symbol) {
+    BestAggregatedPrice bestAggregatedPrice = bestPriceStorage.findTopBySymbolOrderByTimestampDesc(symbol);
+    if(bestAggregatedPrice == null) return BestPriceDto.builder().symbol(symbol).build();
+
+    AggregationPrice aggregationPrice =  transformer.reverseTransform(bestAggregatedPrice);
+
+    return BestPriceDto.builder()
+        .symbol(aggregationPrice.getSymbol())
+        .bestAskPrice(String.valueOf(aggregationPrice.getAskPrice()))
+        .bestBidPrice(String.valueOf(aggregationPrice.getBidPrice()))
+        .build();
   }
 }
