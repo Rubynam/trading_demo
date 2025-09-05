@@ -1,0 +1,11 @@
+curl --location 'http://127.0.0.1:8080/api/trade' \
+--header 'Content-Type: application/json' \
+--data '{
+    "symbol": "BTCUSDT",
+    "side": "BUY",
+    "quantity": 1,
+    "username": "user123"
+}'
+
+curl --location 'http://127.0.0.1:8080/api/price/best/BTCUSDT' \
+--data ''

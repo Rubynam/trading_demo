@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.trading.application.service.PriceService;
+import org.trading.domain.logic.PriceService;
 import org.trading.domain.aggregates.AggregationPrice;
 
 @Service

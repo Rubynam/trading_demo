@@ -1,4 +1,4 @@
-package org.trading.application.service;
+package org.trading.domain.logic;
 
 
 import java.util.List;

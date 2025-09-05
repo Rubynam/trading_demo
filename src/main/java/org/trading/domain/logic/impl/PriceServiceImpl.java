@@ -1,4 +1,4 @@
-package org.trading.application.service;
+package org.trading.domain.logic.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.trading.application.port.BestAggregatedPriceTransformer;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.domain.logic.BestPriceStorage;
+import org.trading.domain.logic.PriceService;
 import org.trading.insfrastructure.entities.BestAggregatedPrice;
 import org.trading.presentation.response.BestPriceDto;
 

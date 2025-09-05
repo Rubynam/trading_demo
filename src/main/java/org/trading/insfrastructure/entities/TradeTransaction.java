@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.trading.insfrastructure.enumeration.TradeSide;
@@ -20,20 +21,18 @@ import org.trading.insfrastructure.enumeration.TradeSide;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TradeTransaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  //todo apply Join with UserWallet if necessary
+  @Column(nullable = false)
+  private String username;
 
   @Column(nullable = false)
-  private String baseCurrency;
-
-  @Column(nullable = false)
-  private String quoteCurrency;
+  private String symbol;
 
   @Column(nullable = false)
   private TradeSide tradeType; // BUY or SELL
@@ -43,6 +42,9 @@ public class TradeTransaction {
 
   @Column(nullable = false, precision = 18, scale = 8)
   private BigDecimal price;
+
+  @Column(nullable = false)
+  private String status;
 
   @Column(nullable = false)
   private LocalDateTime timestamp = LocalDateTime.now();

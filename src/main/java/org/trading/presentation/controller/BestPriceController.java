@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.trading.application.service.PriceService;
+import org.trading.domain.logic.PriceService;
 import org.trading.presentation.response.BestPriceDto;
 
 @RestController
-@RequestMapping("/api/price")
+@RequestMapping("/price")
 @RequiredArgsConstructor
 @Slf4j
 public class BestPriceController {

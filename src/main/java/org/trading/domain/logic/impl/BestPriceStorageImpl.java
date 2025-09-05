@@ -24,7 +24,6 @@ public class BestPriceStorageImpl implements BestPriceStorage {
 
   @Override
   public BestAggregatedPrice findTopBySymbolOrderByTimestampDesc(String symbol) {
-    BestAggregatedPrice bestAggregatedPrice = bestAggregatedPriceRepository.findTopBySymbolOrderByTimestampDesc(symbol);
-    return bestAggregatedPrice;
+    return bestAggregatedPriceRepository.findTopBySymbolOrderByTimestampDesc(symbol);
   }
 }
