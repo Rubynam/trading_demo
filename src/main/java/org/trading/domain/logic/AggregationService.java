@@ -1,4 +1,4 @@
-package org.trading.application;
+package org.trading.domain.logic;
 
 import java.util.List;
 import org.trading.domain.aggregates.AggregationPrice;

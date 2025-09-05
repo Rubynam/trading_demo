@@ -9,7 +9,6 @@ import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.domain.logic.BestPriceStorage;
 import org.trading.domain.logic.PriceService;
 import org.trading.insfrastructure.entities.BestAggregatedPrice;
-import org.trading.presentation.response.BestPriceDto;
 
 @Service
 @Slf4j
@@ -31,16 +30,15 @@ public class PriceServiceImpl implements PriceService {
   }
 
   @Override
-  public BestPriceDto getBestPrice(String symbol) {
-    BestAggregatedPrice bestAggregatedPrice = bestPriceStorage.findTopBySymbolOrderByTimestampDesc(symbol);
-    if(bestAggregatedPrice == null) return BestPriceDto.builder().symbol(symbol).build();
+  public AggregationPrice getBestPrice(String symbol) {
+    BestAggregatedPrice bestAggregatedPrice = bestPriceStorage.findTopBySymbolOrderByTimestampDesc(
+        symbol);
+    if(bestAggregatedPrice == null) {
+      log.warn("No best aggregated price found for symbol {}",symbol);
+      return null;
+    }
 
-    AggregationPrice aggregationPrice =  transformer.reverseTransform(bestAggregatedPrice);
-
-    return BestPriceDto.builder()
-        .symbol(aggregationPrice.getSymbol())
-        .bestAskPrice(String.valueOf(aggregationPrice.getAskPrice()))
-        .bestBidPrice(String.valueOf(aggregationPrice.getBidPrice()))
-        .build();
+    return transformer.reverseTransform(bestAggregatedPrice);
   }
+
 }
