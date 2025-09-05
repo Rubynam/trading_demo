@@ -28,6 +28,5 @@ public class TransactionServiceImpl implements TransactionService {
         .build();
 
     tradeTransactionRepository.save(tradeTransaction);
-    return true;
   }
 }
