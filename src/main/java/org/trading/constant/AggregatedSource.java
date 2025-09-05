@@ -1,4 +1,4 @@
-package org.trading.insfrastructure.constant;
+package org.trading.constant;
 
 public enum AggregatedSource {
 

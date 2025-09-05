@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.trading.application.AggregatedBinanceSourceService;
 import org.trading.application.AggregatedHuobiSourceService;
 import org.trading.domain.aggregates.AggregationPrice;
-import org.trading.insfrastructure.constant.AggregatedSource;
+import org.trading.constant.AggregatedSource;
 
 @Service
 @RequiredArgsConstructor

@@ -20,7 +20,6 @@ public class BestPriceStorageImpl implements BestPriceStorage {
   @Override
   @Transactional
   public List<BestAggregatedPrice> save(List<BestAggregatedPrice> prices) {
-    //todo in this task Only support Ethereum - ETHUSDT and Bitcoin - BTCUSDT pairs of crypto
     //so we need to filter currentcy pair before.
     return bestAggregatedPriceRepository.saveAll(prices);
   }
