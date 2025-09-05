@@ -1,4 +1,4 @@
-package org.trading.application;
+package org.trading.domain.logic.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.trading.application.port.BinanceDataTransformer;
 import org.trading.domain.aggregates.AggregationPrice;
+import org.trading.domain.logic.AggregationService;
 import org.trading.insfrastructure.mapper.BinanceData;
 
 @Service

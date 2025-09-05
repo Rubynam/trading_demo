@@ -1,4 +1,4 @@
-package org.trading.application;
+package org.trading.domain.logic.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.trading.application.port.HuobiDataTransformer;
 import org.trading.domain.aggregates.AggregationPrice;
+import org.trading.domain.logic.AggregationService;
 import org.trading.insfrastructure.mapper.HuobiData;
 
 @Service

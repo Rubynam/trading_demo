@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BestPriceDto {
+public class BestPriceResponse {
 
   private String symbol;
   private String bestBidPrice;

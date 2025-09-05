@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.trading.application.AggregatedBinanceSourceService;
-import org.trading.application.AggregatedHuobiSourceService;
+import org.trading.domain.logic.impl.AggregatedBinanceSourceService;
+import org.trading.domain.logic.impl.AggregatedHuobiSourceService;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.constant.AggregatedSource;
 

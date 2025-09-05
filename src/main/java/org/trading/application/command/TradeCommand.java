@@ -14,7 +14,7 @@ import org.trading.domain.logic.UserWalletService;
 import org.trading.domain.logic.impl.UserBalanceValidation;
 import org.trading.insfrastructure.entities.UserWallet;
 import org.trading.presentation.request.TradeRequest;
-import org.trading.presentation.response.BestPriceDto;
+import org.trading.presentation.response.BestPriceResponse;
 import org.trading.presentation.response.TradeResponse;
 
 @Slf4j
@@ -31,12 +31,12 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public TradeResponse execute(TradeRequest input) throws Exception {
-    BestPriceDto bestPriceDto = priceService.getBestPrice(input.getSymbol());
-    if(bestPriceDto == null) throw new IllegalArgumentException("Invalid symbol");
+    var bestPrice = priceService.getBestPrice(input.getSymbol());
+    if(bestPrice == null) throw new IllegalArgumentException("Invalid symbol");
     if(!symbolValidation.validate(input.getSymbol())) throw new IllegalArgumentException("Symbol does not allow");
 
-    BigDecimal bidPrice = BigDecimal.valueOf(Double.parseDouble(bestPriceDto.getBestBidPrice()));
-    BigDecimal askPrice = BigDecimal.valueOf(Double.parseDouble(bestPriceDto.getBestAskPrice()));
+    BigDecimal bidPrice = bestPrice.getBidPrice();
+    BigDecimal askPrice = bestPrice.getAskPrice();
     BigDecimal price = getPrice(input, bidPrice, askPrice);
 
     log.info("Executing trade username={} side={} price={}",input.getUsername(),input.getSide(),price);
