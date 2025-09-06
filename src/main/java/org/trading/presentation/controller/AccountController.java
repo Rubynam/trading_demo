@@ -3,6 +3,7 @@ package org.trading.presentation.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,7 @@ public class AccountController {
   private final AccountBalanceQueries queries;
 
   @GetMapping("/{username}")
-  public AccountBalanceResponse getAccount(@PathVariable(value = "username") @Valid @NotBlank String username)
+  public List<AccountBalanceResponse> getAccount(@PathVariable(value = "username") @Valid @NotBlank String username)
       throws Exception {
     return queries.getAccountBalanceBy(username);
   }

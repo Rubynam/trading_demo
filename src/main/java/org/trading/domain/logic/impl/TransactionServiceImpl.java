@@ -36,6 +36,6 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Override
   public Page<TradeTransaction> findAllBy(String username, Pageable pageable) {
-    return tradeTransactionRepository.findAllByUsername(username,pageable);
+    return tradeTransactionRepository.findAllByUsernameOrderByTimestampDesc(username,pageable);
   }
 }

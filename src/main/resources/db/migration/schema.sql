@@ -9,7 +9,7 @@ CREATE TABLE USER_WALLET (
     username VARCHAR(255) NOT NULL ,
     currency VARCHAR(10) NOT NULL,
     balance DECIMAL(18, 8) NOT NULL,
-    UNIQUE (username)
+    UNIQUE (username,currency)
 );
 
 ALTER TABLE USER_WALLET ADD CONSTRAINT fk_user_wallet_user FOREIGN KEY (username) REFERENCES APP_USER (username) ON DELETE CASCADE;

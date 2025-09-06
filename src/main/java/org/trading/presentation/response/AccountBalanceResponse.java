@@ -16,4 +16,5 @@ public class AccountBalanceResponse {
 
   private String username;
   private BigDecimal balance;
+  private String currency;
 }
