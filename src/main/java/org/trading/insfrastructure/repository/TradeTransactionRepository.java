@@ -9,5 +9,5 @@ import org.trading.insfrastructure.entities.TradeTransaction;
 @Repository
 public interface TradeTransactionRepository extends JpaRepository<TradeTransaction, Long> {
 
-  Page<TradeTransaction> findAllByUsername(String username, Pageable pageable);
+  Page<TradeTransaction> findAllByUsernameOrderByTimestampDesc(String username, Pageable pageable);
 }

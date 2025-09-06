@@ -3,15 +3,21 @@ package org.trading.domain.logic.impl;
 import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.trading.common.PairWallet;
 import org.trading.domain.logic.AmountValidation;
-import org.trading.insfrastructure.entities.UserWallet;
+import org.trading.presentation.request.TradeRequest;
 
 @Service
 @Slf4j
-public class UserBalanceValidation implements AmountValidation<UserWallet> {
+public class UserBalanceValidation implements AmountValidation<PairWallet> {
 
   @Override
-  public boolean validate(UserWallet input, BigDecimal amount) {
-    return input.getBalance().compareTo(amount) >= 0;
+  public boolean validate(PairWallet pairWallet, BigDecimal amount, TradeRequest input) {
+    final var tradeSide = input.getSide();
+    return switch (tradeSide){
+      case BUY -> pairWallet.getQuoteWallet().getBalance().compareTo(amount) >= 0;
+      case SELL -> pairWallet.getBaseWallet().getBalance().compareTo(
+          BigDecimal.valueOf(input.getQuantity())) >= 0;
+    };
   }
 }
