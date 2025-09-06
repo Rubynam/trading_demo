@@ -3,9 +3,9 @@ package org.trading.domain.logic;
 import java.math.BigDecimal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.trading.constant.TransactionStatus;
+import org.trading.domain.enumeration.TransactionStatus;
 import org.trading.insfrastructure.entities.TradeTransaction;
-import org.trading.insfrastructure.enumeration.TradeSide;
+import org.trading.domain.enumeration.TradeSide;
 
 public interface TransactionService {
 

@@ -3,7 +3,7 @@ package org.trading.domain.logic.impl;
 import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.trading.common.PairWallet;
+import org.trading.domain.aggregates.PairWallet;
 import org.trading.domain.logic.AmountValidation;
 import org.trading.presentation.request.TradeRequest;
 

@@ -1,4 +1,4 @@
-package org.trading.constant;
+package org.trading.domain.enumeration;
 
 public enum TransactionStatus {
   SUCCESS,

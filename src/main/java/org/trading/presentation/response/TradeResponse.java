@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.trading.constant.TransactionStatus;
+import org.trading.domain.enumeration.TransactionStatus;
 
 @Getter
 @Setter

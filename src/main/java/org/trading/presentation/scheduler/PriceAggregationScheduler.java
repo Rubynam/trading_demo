@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.trading.domain.aggregates.AggregationPrice;
-import org.trading.constant.AggregatedSource;
+import org.trading.domain.enumeration.AggregatedSource;
 import org.trading.application.command.AggregatedPriceCommand;
 import org.trading.application.command.AggregatedPriceStoreCommand;
 

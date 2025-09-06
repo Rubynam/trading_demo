@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
-import org.trading.common.PairWallet;
+import org.trading.domain.aggregates.PairWallet;
 import org.trading.domain.logic.UserWalletService;
 import org.trading.insfrastructure.entities.UserWallet;
 import org.trading.insfrastructure.repository.UserWalletRepository;
