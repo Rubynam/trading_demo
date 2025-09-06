@@ -22,7 +22,7 @@ public class UserWalletServiceImpl implements UserWalletService {
   @Override
   public UserWallet deduct(UserWallet wallet, BigDecimal amount) {
     log.info("Deducting {} from wallet {}", amount, wallet);
-    if(wallet.getBalance().compareTo(amount) >= 0) {
+    if (wallet.getBalance().compareTo(amount) >= 0) {
       wallet.setBalance(wallet.getBalance().subtract(amount));
       return userWalletRepository.save(wallet);
     }
@@ -37,17 +37,21 @@ public class UserWalletServiceImpl implements UserWalletService {
   }
 
   /**
-   * @return a pair wallet. Left indicate baseCurrency (USDT)
-   * Right indicate quoteCurrency (BTC)
+   * @return a pair wallet. Left indicate baseCurrency (USDT) Right indicate quoteCurrency (BTC)
    */
   @Override
-  public PairWallet get(String username, String baseCurrency, String quoteCurrency) throws Exception {
-    if(!userWalletRepository.existsUserWalletByUsername(username)) throw new IllegalArgumentException("Invalid username");
+  public PairWallet get(String username, String baseCurrency, String quoteCurrency)
+      throws Exception {
+    if (!userWalletRepository.existsUserWalletByUsername(username)) {
+      throw new IllegalArgumentException("Invalid username");
+    }
 
-    UserWallet userWallet = userWalletRepository.findUserWalletByUsernameAndCurrency(username,baseCurrency).orElse(buildUserWaller(username,baseCurrency));
-    UserWallet quoteWallet = userWalletRepository.findUserWalletByUsernameAndCurrency(username,quoteCurrency).orElse(buildUserWaller(username,quoteCurrency));
+    UserWallet userWallet = userWalletRepository.findUserWalletByUsernameAndCurrency(username,
+        baseCurrency).orElse(buildUserWaller(username, baseCurrency));
+    UserWallet quoteWallet = userWalletRepository.findUserWalletByUsernameAndCurrency(username,
+        quoteCurrency).orElse(buildUserWaller(username, quoteCurrency));
 
-    return new PairWallet(userWallet,quoteWallet);
+    return new PairWallet(userWallet, quoteWallet);
   }
 
   @Override

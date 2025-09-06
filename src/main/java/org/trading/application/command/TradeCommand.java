@@ -5,16 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.trading.common.PairWallet;
 import org.trading.constant.TransactionStatus;
 import org.trading.domain.logic.PriceService;
 import org.trading.domain.logic.SymbolValidation;
 import org.trading.domain.logic.TransactionService;
 import org.trading.domain.logic.UserWalletService;
-import org.trading.domain.logic.impl.UserBalanceValidation;
-import org.trading.insfrastructure.enumeration.TradeSide;
+import org.trading.domain.logic.impl.TransactionExecutionService;
 import org.trading.presentation.request.TradeRequest;
 import org.trading.presentation.response.TradeResponse;
 
@@ -26,8 +23,8 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
   private final PriceService priceService;
   private final UserWalletService userWalletService;
   private final TransactionService transactionService;
-  private final UserBalanceValidation userBalanceValidation;
   private final SymbolValidation symbolValidation;
+  private final TransactionExecutionService transactionExecutionService;
 
   @Override
   public TradeResponse execute(TradeRequest input) throws Exception {
@@ -44,9 +41,10 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
 
     PairWallet pairWallet = userWalletService.get(input.getUsername(),currency.getLeft(), currency.getRight());
 
-    boolean isSuccess = executeBalance(pairWallet, input, price);
+    boolean isSuccess = executeBalanceInTransaction(pairWallet, input, price);
 
     if(!isSuccess) {
+      transactionService.store(input.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide(), TransactionStatus.FAILURE);
       return response(TransactionStatus.FAILURE,price, input);
     }
 
@@ -63,33 +61,14 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
     };
   }
 
-  boolean executeBalance(PairWallet pairWallet, TradeRequest input, BigDecimal price)
-      throws Exception {
-    BigDecimal amount = price.multiply(BigDecimal.valueOf(input.getQuantity()));
-    final TradeSide side = input.getSide();
-
-    if(!userBalanceValidation.validate(pairWallet,amount, input)){
-      log.warn("Insufficient balance username={} amount {} action {} symbol {}",input.getUsername(),amount,input.getSide(),input.getSymbol());
-      transactionService.store(input.getUsername(),input.getSymbol(),price,BigDecimal.valueOf(input.getQuantity()),input.getSide(), TransactionStatus.FAILURE);
+  boolean executeBalanceInTransaction(PairWallet pairWallet, TradeRequest input, BigDecimal price){
+    try{
+      //prevent Transactional self-invocation, which does not lead to an actual transaction at runtime
+      return transactionExecutionService.executeBalance(pairWallet, input, price);
+    }catch (Exception e){
+      log.error("Error in transaction",e);
       return false;
     }
-    switch (side) {
-      case BUY: {
-        userWalletService.deduct(pairWallet.getQuoteWallet(), amount);
-        userWalletService.add(pairWallet.getBaseWallet(), BigDecimal.valueOf(input.getQuantity()));
-        break;
-      }
-      case SELL: {
-        userWalletService.deduct(pairWallet.getBaseWallet(), BigDecimal.valueOf(input.getQuantity()));
-        userWalletService.add(pairWallet.getQuoteWallet(), amount);
-        break;
-      }
-      default:
-        log.warn("Invalid side {}",side);
-        return false;
-    }
-
-    return true;
   }
 
   private static TradeResponse response(TransactionStatus status, BigDecimal price,
