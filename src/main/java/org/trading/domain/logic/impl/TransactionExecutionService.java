@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.trading.common.PairWallet;
+import org.trading.domain.aggregates.PairWallet;
 import org.trading.domain.logic.UserWalletService;
-import org.trading.insfrastructure.enumeration.TradeSide;
+import org.trading.domain.enumeration.TradeSide;
 import org.trading.presentation.request.TradeRequest;
 
 @Service

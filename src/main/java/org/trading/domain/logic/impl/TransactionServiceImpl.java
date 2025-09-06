@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.trading.constant.TransactionStatus;
+import org.trading.domain.enumeration.TransactionStatus;
 import org.trading.domain.logic.TransactionService;
 import org.trading.insfrastructure.entities.TradeTransaction;
-import org.trading.insfrastructure.enumeration.TradeSide;
+import org.trading.domain.enumeration.TradeSide;
 import org.trading.insfrastructure.repository.TradeTransactionRepository;
 
 @Service

@@ -3,7 +3,7 @@ package org.trading.domain.logic;
 import java.math.BigDecimal;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
-import org.trading.common.PairWallet;
+import org.trading.domain.aggregates.PairWallet;
 import org.trading.insfrastructure.entities.UserWallet;
 
 public interface UserWalletService {

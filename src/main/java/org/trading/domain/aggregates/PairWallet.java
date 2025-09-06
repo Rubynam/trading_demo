@@ -1,4 +1,4 @@
-package org.trading.common;
+package org.trading.domain.aggregates;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.lang.NonNull;
