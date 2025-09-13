@@ -37,5 +37,6 @@ source:
     url: https://api.huobi.pro/market/tickers
 server:
   port: 8080
+
   servlet:
     context-path: /api

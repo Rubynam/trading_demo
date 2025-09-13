@@ -24,3 +24,12 @@ Functional Scope
                Remarks: Do not integrate with other third party system
                Create an api to retrieve the user’s crypto currencies wallet balance
                Create an api to retrieve the user trading history.
+
+
+local
+```shell
+./gradlew compileNativeLibrary
+./gradlew bootRun
+```
+
+''ONLY MACOS''

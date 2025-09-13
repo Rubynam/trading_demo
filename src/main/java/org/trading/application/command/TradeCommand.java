@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.trading.domain.aggregates.PairWallet;
 import org.trading.domain.enumeration.TransactionStatus;
 import org.trading.domain.logic.PriceService;
@@ -26,6 +28,7 @@ public class TradeCommand implements Command<TradeRequest, TradeResponse> {
   private final SymbolValidation symbolValidation;
   private final TransactionExecutionService transactionExecutionService;
 
+  @Transactional(isolation = Isolation.READ_COMMITTED)
   @Override
   public TradeResponse execute(TradeRequest input) throws Exception {
     var bestPrice = priceService.getBestPrice(input.getSymbol());
