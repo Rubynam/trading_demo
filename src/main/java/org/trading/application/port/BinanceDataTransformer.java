@@ -31,6 +31,8 @@ public class BinanceDataTransformer implements Transformer<BinanceData, Aggregat
         .symbol(input.getSymbol())
         .bidPrice(BigDecimal.valueOf(Double.parseDouble(input.getBidPrice())))
         .askPrice(BigDecimal.valueOf(Double.parseDouble(input.getAskPrice())))
+        .bidQty(BigDecimal.valueOf(Double.parseDouble(input.getBidQty())))
+        .askQty(BigDecimal.valueOf(Double.parseDouble(input.getAskPrice())))
         .build();
   }
 

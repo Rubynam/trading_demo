@@ -25,10 +25,25 @@ spring:
 scheduler:
   fixed-rate: 10000
 
+kafka:
+  bootstrap-servers: localhost:9092,localhost:9094
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    acks: all
+    retries: 3
+    batch-size: 16384
+    linger-ms: 100
+    compression-type: lz4
+    max-in-flight-requests-per-connection: 5
+    enable-idempotence: true
+    retry-backoff-ms: 1000
+  topics-source: inbound-symbol-source
+
 logging:
   level:
     root: info
-    org.trading.application.*: DEBUG
+    org.trading.application.*: INFO
 
 source:
   binance:
@@ -36,7 +51,7 @@ source:
   huobi:
     url: https://api.huobi.pro/market/tickers
 server:
-  port: 8080
+  port: 11080
 
   servlet:
     context-path: /api

@@ -12,5 +12,7 @@ public class AggregationPrice {
 
   private BigDecimal bidPrice;
   private BigDecimal askPrice;
+  private BigDecimal bidQty;
+  private BigDecimal askQty;
   private String symbol;
 }
