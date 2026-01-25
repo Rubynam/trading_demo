@@ -23,7 +23,7 @@ spring:
       path: /h2-console
 
 scheduler:
-  fixed-rate: 10000
+  fixed-rate: 5000
 
 kafka:
   bootstrap-servers: localhost:9092,localhost:9094

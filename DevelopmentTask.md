@@ -30,6 +30,10 @@ to generate candestick. The lowest level candle stick is chart 1 minute.
   You need to you kafka latest version, config Kraft. You expose port kafka in machine network.
   You must mount Data Kafka in level root project and named data folder.
 - *DO NOT*: Do not implement Java. Do not add ssl on Kafka cluster.
+#### Task 2
+- Background: Read architecture-design.md, you focus on Kafka-cluster
+- Action: Create Scylla DB with 1 master and 1 slave.
+- *DO NOT*: implement Java code or unit test
 
 ### Apache Spark task
 #### Task 1
@@ -47,3 +51,14 @@ to generate candestick. The lowest level candle stick is chart 1 minute.
   - You need to design pattern for source connector.
   - Design key based on provider source.
 - **Do not**: Create Java codes
+#### Task 3
+- Background: Read architecture-design.md, you focus on Apache Spark and task 1.
+- Action: You create a script.sql located at db.migration.
+  - You need to create a Key Space is market
+  - You need to create a user named market_user and password: abc@1234. Grant full permission to help this user can access market
+  - In market Key Space you need to create a table named chart_m1 to store ohlc
+
+#### Task 3
+- Background: Read architecture-design.md, you focus on Apache Spark and task 1.
+- Action: Create a sink connector using Java, apache spark and ksql. Sink connector is a project at /Users/rubynam/Desktop/workspace/sink-connect.  I have set up basic project. You must apply springboot, you use application.yaml to store config.
+- **Do Not **: Implement unit test and **DO NOT** write file MD
