@@ -1,0 +1,166 @@
+version: '3.8'
+
+services:
+  # Node 1: Controller + Broker (Master)
+  kafka-controller:
+    image: apache/kafka:latest
+    container_name: kafka-controller
+    hostname: kafka-controller
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'controller,broker'
+
+      # Node 1 là voter duy nhất
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-controller:9093'
+
+      # Listeners
+      KAFKA_LISTENERS: 'CONTROLLER://:9093,INTERNAL://:29092,EXTERNAL://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka-controller:29092,EXTERNAL://localhost:9092'
+
+      # Mapping
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+
+      # Config cơ bản
+      KAFKA_LOG_DIRS: '/var/lib/kafka/data'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+
+    volumes:
+      - ./data/kafka-controller:/var/lib/kafka/data
+    networks:
+      - kafka-network
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Node 2: Broker Only (Slave)
+  kafka-broker:
+    image: apache/kafka:latest
+    container_name: kafka-broker
+    hostname: kafka-broker
+    ports:
+      - "9094:9092"
+    environment:
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: 'broker'
+
+      # Trỏ về Node 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-controller:9093'
+
+      # Broker thì KHÔNG mở port CONTROLLER (9093) để lắng nghe
+      KAFKA_LISTENERS: 'INTERNAL://:29092,EXTERNAL://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://kafka-broker:29092,EXTERNAL://localhost:9094'
+
+      # === PHẦN SỬA LỖI Ở ĐÂY ===
+      # 1. Vẫn phải khai báo tên Listener Controller cho dù không listen
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+
+      # 2. Phải map tên CONTROLLER đó ra protocol (PLAINTEXT) để nó hiểu
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      # ==========================
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+
+      # Config cơ bản
+      KAFKA_LOG_DIRS: '/var/lib/kafka/data'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+
+    volumes:
+      - ./data/kafka-broker:/var/lib/kafka/data
+    networks:
+      - kafka-network
+    depends_on:
+      kafka-controller:
+        condition: service_healthy
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      # Tên cluster hiển thị trên UI
+      KAFKA_CLUSTERS_0_NAME: local-cluster
+      # Kết nối tới Kafka qua mạng nội bộ Docker (dùng port INTERNAL 29092)
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-controller:29092,kafka-broker:29092
+      # Fix lỗi hiển thị tiếng Việt hoặc binary
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
+    networks:
+      - kafka-network
+    depends_on:
+      - kafka-controller
+
+  # ScyllaDB Node 1: Master
+  scylla-master:
+    image: scylladb/scylla:latest
+    container_name: scylla-master
+    hostname: scylla-master
+    ports:
+      - "9042:9042"   # CQL native transport
+      - "9160:9160"   # Thrift client API
+      - "6999:7000"   # Inter-node communication
+      - "7001:7001"   # Inter-node communication (TLS)
+      - "10000:10000" # REST API
+    command: --smp 1 --memory 1G --overprovisioned 1 --api-address 0.0.0.0 --authenticator PasswordAuthenticator --authorizer CassandraAuthorizer
+    environment:
+      - SCYLLA_USER=scylla_admin
+      - SCYLLA_PASSWORD=scylla_password_123
+    volumes:
+      - ./data/scylla-master:/var/lib/scylla
+    networks:
+      - kafka-network
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra -e 'describe cluster' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # ScyllaDB Node 2: Slave
+  scylla-slave:
+    image: scylladb/scylla:latest
+    container_name: scylla-slave
+    hostname: scylla-slave
+    ports:
+      - "9043:9042"   # CQL native transport (mapped to different host port)
+      - "9161:9160"   # Thrift client API
+      - "7002:7000"   # Inter-node communication
+      - "7003:7001"   # Inter-node communication (TLS)
+      - "10001:10000" # REST API
+    command: --smp 1 --memory 1G --overprovisioned 1 --api-address 0.0.0.0 --seeds=scylla-master --authenticator PasswordAuthenticator --authorizer CassandraAuthorizer
+    environment:
+      - SCYLLA_USER=scylla_admin
+      - SCYLLA_PASSWORD=scylla_password_123
+    volumes:
+      - ./data/scylla-slave:/var/lib/scylla
+    networks:
+      - kafka-network
+    depends_on:
+      scylla-master:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra -e 'describe cluster' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+networks:
+  kafka-network:
+    driver: bridge
