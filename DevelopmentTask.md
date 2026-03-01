@@ -58,7 +58,65 @@ to generate candestick. The lowest level candle stick is chart 1 minute.
   - You need to create a user named market_user and password: abc@1234. Grant full permission to help this user can access market
   - In market Key Space you need to create a table named chart_m1 to store ohlc
 
-#### Task 3
+#### Task 4
 - Background: Read architecture-design.md, you focus on Apache Spark and task 1.
 - Action: Create a sink connector using Java, apache spark and ksql. Sink connector is a project at /Users/rubynam/Desktop/workspace/sink-connect.  I have set up basic project. You must apply springboot, you use application.yaml to store config.
 - **Do Not **: Implement unit test and **DO NOT** write file MD
+
+### Task 5:
+- Background: I want to connect scylla db localhost
+- Action: Check build.gradle add scylla db driver or cassandra drive if needed, You have to integrate with jpa.
+- The config connection below
+
+```yaml
+
+  cassandra:
+    contact-points: ${SCYLLA_CONTACT_POINTS:localhost}
+    port: ${SCYLLA_PORT:9042}
+    keyspace-name: market
+    local-datacenter: ${SCYLLA_DATACENTER:datacenter1}
+    schema-action: none
+    username: market_user
+    password: abc@1234
+    request:
+      timeout: 30s
+      consistency: quorum
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    pool:
+      idle-timeout: 60s
+      heartbeat-interval: 30s
+```
+
+### Task 6: [BUG] url jdbc connection string error
+```text
+2026-03-01T13:46:57.583+07:00 ERROR 65823 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+
+```
+- Check the config, you must REMOVE h2db datasource
+### Task 7: [BUG] ScyllaDB connection error
+```text
+2026-03-01T14:20:21.158+07:00  WARN 67592 --- [     s0-admin-1] c.d.o.d.internal.core.pool.ChannelPool   : [s0|/172.18.0.4:9042]  Error while opening new channel (ConnectionInitException: [s0|connecting...] Protocol initialization request, step 1 (STARTUP {CQL_VERSION=3.0.0, DRIVER_NAME=Apache Cassandra Java Driver, DRIVER_VERSION=4.19.0, CLIENT_ID=4b42ffb6-3bd1-4b68-90fc-b1b79e872db2}): failed to send request (java.nio.channels.NotYetConnectedException))
+
+```
+
+Read the wanr log above. You must fix it.

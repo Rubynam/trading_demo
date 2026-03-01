@@ -9,7 +9,6 @@ import org.trading.application.command.SourceConnectorFactory;
 import org.trading.domain.aggregates.AggregationPrice;
 import org.trading.domain.enumeration.AggregatedSource;
 import org.trading.application.command.AggregatedPriceCommand;
-import org.trading.application.command.AggregatedPriceStoreCommand;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +16,6 @@ import org.trading.application.command.AggregatedPriceStoreCommand;
 public class PriceAggregationScheduler {
 
   private final AggregatedPriceCommand command;
-  private final AggregatedPriceStoreCommand storeCommand;
   private final SourceConnectorFactory sourceConnectorFactory;
 
   @Scheduled(fixedRateString = "${scheduler.fixed-rate}") // Every 10 seconds

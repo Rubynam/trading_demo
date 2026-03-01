@@ -1,26 +1,25 @@
 
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:crypto-trading-db;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:/db/migration/schema.sql,classpath:/db/migration/import.sql
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: false
-      path: /h2-console
+  # Cassandra/ScyllaDB Configuration
+  cassandra:
+    contact-points: 127.0.0.1
+    port: 9042
+    keyspace-name: market
+    local-datacenter: ${SCYLLA_DATACENTER:datacenter1}
+    schema-action: none
+    username: market_user
+    password: abc@1234
+    request:
+      timeout: 30s
+      consistency: quorum
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    pool:
+      idle-timeout: 60s
+      heartbeat-interval: 30s
+
 
 scheduler:
   fixed-rate: 5000
