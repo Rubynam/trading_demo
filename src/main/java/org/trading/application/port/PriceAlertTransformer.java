@@ -13,6 +13,7 @@ public class PriceAlertTransformer implements Transformer<AlertRequest, PriceAle
                 .symbol(input.getSymbol())
                 .source(input.getSource().name())
                 .condition(input.getCondition().name())
+                .frequencyCondition(input.getFrequencyCondition().name())
                 .hitCount(input.getHitCount())
                 .build();
     }

@@ -89,6 +89,23 @@ services:
       kafka-controller:
         condition: service_healthy
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      # Tên cluster hiển thị trên UI
+      KAFKA_CLUSTERS_0_NAME: local-cluster
+      # Kết nối tới Kafka qua mạng nội bộ Docker (dùng port INTERNAL 29092)
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-controller:29092,kafka-broker:29092
+      # Fix lỗi hiển thị tiếng Việt hoặc binary
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
+    networks:
+      - kafka-network
+    depends_on:
+      - kafka-controller
+
   # ScyllaDB Node 1: Master
   scylla-master:
     image: scylladb/scylla:latest

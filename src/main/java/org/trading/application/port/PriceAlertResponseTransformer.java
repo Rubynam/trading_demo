@@ -3,6 +3,7 @@ package org.trading.application.port;
 import org.springframework.stereotype.Component;
 import org.trading.domain.enumeration.AlertCondition;
 import org.trading.domain.enumeration.AlertStatus;
+import org.trading.domain.enumeration.FrequencyCondition;
 import org.trading.insfrastructure.entities.PriceAlertEntity;
 import org.trading.presentation.response.AlertResponse;
 
@@ -18,6 +19,7 @@ public class PriceAlertResponseTransformer implements Transformer<PriceAlertEnti
                 .targetPrice(input.getTargetPrice())
                 .condition(AlertCondition.valueOf(input.getCondition()))
                 .status(AlertStatus.valueOf(input.getStatus()))
+                .frequencyCondition(FrequencyCondition.valueOf(input.getFrequencyCondition()))
                 .maxHits(input.getMaxHits())
                 .hitCount(input.getHitCount())
                 .createdAt(input.getCreatedAt())

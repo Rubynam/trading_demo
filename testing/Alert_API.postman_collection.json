@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "alert-api-collection",
+		"name": "Trading Demo - Alert API",
+		"description": "Collection for Price Alert endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Submit Price Alert",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"symbol\": \"BTCUSDT\",\n    \"targetPrice\": 70000,\n    \"hitCount\": 10,\n    \"condition\": \"ABOVE\",\n    \"source\": \"BINANCE\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/alert",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"alert"
+					]
+				},
+				"description": "Submit a price alert for BTCUSDT symbol. Alert will trigger when price goes ABOVE 70000 for 10 consecutive times from BINANCE source."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		}
+	]
+}

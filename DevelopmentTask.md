@@ -120,3 +120,6 @@ Consider the following:
 ```
 
 Read the wanr log above. You must fix it.
+### Task 8: [Analyze] 
+- Background: Read architecture-design.md, you must read Task 4 above.
+- Action: Focus on DataLoggingStream at sink-connector project located at /Users/rubynam/Desktop/workspace/sink-connect. I want to display a field to show that how many message per second.
