@@ -1,10 +1,5 @@
 package org.trading.insfrastructure.config;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -12,7 +7,8 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
-import org.trading.insfrastructure.monitor.CoreInfo;
+
+import java.util.concurrent.*;
 
 @EnableAsync
 @Component
@@ -20,7 +16,6 @@ import org.trading.insfrastructure.monitor.CoreInfo;
 public class CustomTomcatConfig {
 
   private final ServerProperties serverProperties;
-  private final CoreInfo coreInfo;
 
 
   @Bean
@@ -41,7 +36,7 @@ public class CustomTomcatConfig {
 
     ThreadFactory threadFactory = r -> {
       var thread = new Thread(r);
-      thread.setName(coreInfo.formatLogstring());
+      thread.setName("Tomcat-thread-%d");
       return thread;
     };
     return new ThreadPoolExecutor(

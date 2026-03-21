@@ -89,22 +89,22 @@ services:
       kafka-controller:
         condition: service_healthy
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "8080:8080"
-    environment:
-      # Tên cluster hiển thị trên UI
-      KAFKA_CLUSTERS_0_NAME: local-cluster
-      # Kết nối tới Kafka qua mạng nội bộ Docker (dùng port INTERNAL 29092)
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-controller:29092,kafka-broker:29092
-      # Fix lỗi hiển thị tiếng Việt hoặc binary
-      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
-    networks:
-      - kafka-network
-    depends_on:
-      - kafka-controller
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui:latest
+#    container_name: kafka-ui
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      # Tên cluster hiển thị trên UI
+#      KAFKA_CLUSTERS_0_NAME: local-cluster
+#      # Kết nối tới Kafka qua mạng nội bộ Docker (dùng port INTERNAL 29092)
+#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-controller:29092,kafka-broker:29092
+#      # Fix lỗi hiển thị tiếng Việt hoặc binary
+#      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
+#    networks:
+#      - kafka-network
+#    depends_on:
+#      - kafka-controller
 
   # ScyllaDB Node 1: Master
   scylla-master:
@@ -119,8 +119,8 @@ services:
       - "10000:10000" # REST API
     command: --smp 1 --memory 1G --overprovisioned 1 --api-address 0.0.0.0 --authenticator PasswordAuthenticator --authorizer CassandraAuthorizer
     environment:
-      - SCYLLA_USER=scylla_admin
-      - SCYLLA_PASSWORD=scylla_password_123
+      - SCYLLA_USER=cassandra
+      - SCYLLA_PASSWORD=cassandra
     volumes:
       - ./data/scylla-master:/var/lib/scylla
     networks:
@@ -145,8 +145,8 @@ services:
       - "10001:10000" # REST API
     command: --smp 1 --memory 1G --overprovisioned 1 --api-address 0.0.0.0 --seeds=scylla-master --authenticator PasswordAuthenticator --authorizer CassandraAuthorizer
     environment:
-      - SCYLLA_USER=scylla_admin
-      - SCYLLA_PASSWORD=scylla_password_123
+      - SCYLLA_USER=cassandra
+      - SCYLLA_PASSWORD=cassandra
     volumes:
       - ./data/scylla-slave:/var/lib/scylla
     networks:

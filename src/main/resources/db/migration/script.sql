@@ -63,8 +63,6 @@ CREATE TABLE IF NOT EXISTS market.chart_m1 (
     'compaction_window_size': 1,
     'compaction_window_unit': 'DAYS'
   }
-  AND gc_grace_seconds = 864000           -- 10 days for deleted data tombstone cleanup
-  AND default_time_to_live = 7776000      -- 90 days retention (auto-delete old data)
   AND comment = '1-minute OHLC candlestick data from Binance and Huobi exchanges';
 
 -- ============================================================================
