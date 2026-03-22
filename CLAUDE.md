@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a cryptocurrency trading demo application supporting ETHUSDT and BTCUSDT pairs. It aggregates prices from Binance and Huobi exchanges, stores the best prices, and allows users to execute trades against their wallet balances.
+This is a cryptocurrency trading demo application supporting multiple cryptocurrency pairs (BTCUSDT, ETHUSDT, SOLUSDT, ADAUSDT). It aggregates K-line data and market prices from Binance and Huobi exchanges, streams data through Kafka, and provides market data endpoints.
+
+### Supported Symbols
+- BTCUSDT (Bitcoin/USDT)
+- ETHUSDT (Ethereum/USDT)
+- SOLUSDT (Solana/USDT)
+- ADAUSDT (Cardano/USDT)
 
 ## Build and Run Commands
 
@@ -21,7 +27,7 @@ This compiles `src/main/c/metricscpu.c` into a native library used for thread mo
 ./gradlew bootRun
 ```
 
-The application starts on port 8080 with context path `/api`.
+The application starts on port 11080 with context path `/api`.
 
 ### Run Tests
 ```bash
@@ -33,92 +39,44 @@ The application starts on port 8080 with context path `/api`.
 ./gradlew build
 ```
 
-## Architecture
+## Configuration Summary
 
-### Layered Architecture Pattern
+### Server
+- **Port**: 11080
+- **Context Path**: /api
 
-The codebase follows a clean architecture with distinct layers:
+### Kafka
+- **Bootstrap Servers**: localhost:9092, localhost:9094
+- **Topics**:
+  - `ingestion-source` (source data ingestion)
+- **Producer Settings**:
+  - Idempotent producer enabled
+  - Acknowledgment: all
+  - Compression: lz4
+  - Retries: 3 with 1s backoff
 
-- **Presentation Layer** (`org.trading.presentation`): REST controllers, request/response DTOs, schedulers
-- **Application Layer** (`org.trading.application`): Commands and queries (CQRS-style), data transformers/ports
-- **Domain Layer** (`org.trading.domain`): Business logic services, aggregates, validations, enumerations
-- **Infrastructure Layer** (`org.trading.insfrastructure`): JPA entities, repositories, external API mappers, configuration
+### Data Sources
 
-### Key Architectural Patterns
+#### Binance API
+- **Book Ticker**: https://api.binance.com/api/v3/ticker/bookTicker
+- **K-Line Data**: https://api.binance.com/api/v3/klines
+- **Ticker**: https://api.binance.com/api/v3/ticker/
+- **Depth**: https://api.binance.com/api/v3/depth
 
-**Command Pattern**: Commands in `application/command/` encapsulate operations:
-- `AggregatedPriceCommand`: Fetches prices from external sources (Binance/Huobi)
-- `AggregatedPriceStoreCommand`: Stores aggregated prices to database
-- `TradeCommand`: Executes user trades
+#### Huobi API
+- **Tickers**: https://api.huobi.pro/market/tickers
 
-**Transformer/Adapter Pattern**: `application/port/` contains transformers for external data:
-- `BinanceDataTransformer` and `HuobiDataTransformer` convert external API responses to domain models
-- `BestAggregatedPriceTransformer` selects best prices from multiple sources
+### Scheduler
+- **Fixed Rate**: 5000000ms (83.3 minutes) for price aggregation - deprecated feature
+- **Spring Batch**: Planned migration to Spring Batch for dynamic, configurable scheduling and job management
+  - Enables runtime job configuration without application restart
+  - Supports complex job orchestration and workflow management
+  - Provides built-in monitoring, logging, and restart capabilities
+  - Allows for parallel processing and partitioning of data aggregation tasks
 
-**Service Layer Pattern**: Domain services in `domain/logic/impl/` implement business rules:
-- Transaction isolation and concurrent trade execution
-- Wallet balance validations
-- Price aggregation logic
+### Logging
+- Root level: INFO
+- Application package: INFO
 
-### Critical Components
-
-**Price Aggregation Scheduler** (`PriceAggregationScheduler.java:22`):
-- Runs every 10 seconds (configurable via `scheduler.fixed-rate` in application.yaml)
-- Fetches from both Binance and Huobi
-- Merges and stores best prices
-
-**Transaction Execution** (`TransactionExecutionService.java:24`):
-- Uses `@Transactional(propagation = REQUIRES_NEW, isolation = SERIALIZABLE)` for trade execution
-- Critical: Each trade creates a new transaction with SERIALIZABLE isolation to prevent concurrent modification issues
-- Validates balances before executing BUY/SELL operations
-
-**Custom Tomcat Configuration** (`CustomTomcatConfig.java`):
-- Custom thread pool executor with dynamic thread naming
-- Thread names formatted as `{threadId}/{cpuCore}` using native library
-- Enables context-aware request tracking
-
-### Native Integration
-
-The application loads a custom native library (`libmetricscpu.dylib`) for CPU monitoring:
-- Source: `src/main/c/metricscpu.c`
-- JNI integration: `CoreInfo.java:15`
-- Gradle task `compileNativeLibrary` compiles for macOS/Linux/Windows
-
-## Database
-
-- **Database**: H2 in-memory database
-- **Schema location**: `src/main/resources/db/migration/schema.sql`
-- **Initial data**: `src/main/resources/db/migration/import.sql`
-- **JPA**: Hibernate with manual schema management (`ddl-auto: none`)
-
-Users start with 50,000 USDT balance (configured in import.sql).
-
-## API Endpoints
-
-All endpoints are prefixed with `/api`:
-
-- `POST /api/trade` - Execute a trade (BUY/SELL)
-- `GET /api/price/best/{symbol}` - Get latest best aggregated price for a symbol
-- `GET /api/account/balance/{username}` - Get user wallet balances
-- `GET /api/transactions/history/{username}` - Get user transaction history
-
-## Configuration
-
-Key configurations in `application.yaml`:
-
-- External API URLs: `source.binance.url` and `source.huobi.url`
-- Scheduler interval: `scheduler.fixed-rate` (default 10000ms)
-- Database connection: `spring.datasource.*`
-- Context path: `server.servlet.context-path: /api`
-
-
-
-## Supported Trading Pairs
-
-Only two pairs are supported:
-- ETHUSDT (Ethereum/USDT)
-- BTCUSDT (Bitcoin/USDT)
-
-Symbol validation is enforced in `SymbolValidationImpl`.
 
 

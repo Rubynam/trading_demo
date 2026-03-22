@@ -2,27 +2,8 @@
 
 spring:
   # Cassandra/ScyllaDB Configuration
-  cassandra:
-    contact-points: 127.0.0.1
-    port: 9042
-    keyspace-name: market
-    local-datacenter: ${SCYLLA_DATACENTER:datacenter1}
-    schema-action: none
-    username: market_user
-    password: abc@1234
-    request:
-      timeout: 30s
-      consistency: quorum
-    connection:
-      connect-timeout: 10s
-      init-query-timeout: 10s
-    pool:
-      idle-timeout: 60s
-      heartbeat-interval: 30s
-
-
 scheduler:
-  fixed-rate: 5000
+  fixed-rate: 5000000
 
 kafka:
   bootstrap-servers: localhost:9092,localhost:9094
@@ -47,6 +28,15 @@ logging:
 source:
   binance:
     url: https://api.binance.com/api/v3/ticker/bookTicker
+    kline-url: https://api.binance.com/api/v3/klines
+    ticker: https://api.binance.com/api/v3/ticker/
+    depth: https://api.binance.com/api/v3/depth
+    kline-white-list-symbol:
+      - BTCUSDT
+      - ETHUSDT
+      - SOLUSDT
+      - ADAUSDT
+
   huobi:
     url: https://api.huobi.pro/market/tickers
 server:

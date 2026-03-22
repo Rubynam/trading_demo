@@ -18,7 +18,8 @@ public class PriceAggregationScheduler {
   private final AggregatedPriceCommand command;
   private final SourceConnectorFactory sourceConnectorFactory;
 
-  @Scheduled(fixedRateString = "${scheduler.fixed-rate}") // Every 10 seconds
+  @Deprecated
+//  @Scheduled(fixedRateString = "${scheduler.fixed-rate}") // Every 10 seconds
   public void fetchPriceFromSource() throws Exception {
     final List<AggregationPrice> binanceData = command.execute(AggregatedSource.Binance);
     final List<AggregationPrice> huobiData = command.execute(AggregatedSource.Huobi);
