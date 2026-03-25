@@ -161,6 +161,28 @@ services:
       retries: 10
       start_period: 60s
 
+  # MySQL Database for Spring Batch
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-batch
+    hostname: mysql-batch
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: abc@123
+      MYSQL_DATABASE: batch_db
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - kafka-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pabc@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   kafka-network:
     driver: bridge

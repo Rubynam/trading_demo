@@ -56,3 +56,5 @@ Thumbs.db
 .gradle
 build
 .DS_Store
+data
+binance-data

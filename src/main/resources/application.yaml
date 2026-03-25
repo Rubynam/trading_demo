@@ -1,7 +1,24 @@
 
 
 spring:
-  # Cassandra/ScyllaDB Configuration
+  # MySQL database for Spring Batch job repository
+  datasource:
+    url: jdbc:mysql://localhost:3306/batch_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: abc@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+  batch:
+    jdbc:
+      initialize-schema: always
+
 scheduler:
   fixed-rate: 5000000
 
@@ -31,11 +48,7 @@ source:
     kline-url: https://api.binance.com/api/v3/klines
     ticker: https://api.binance.com/api/v3/ticker/
     depth: https://api.binance.com/api/v3/depth
-    kline-white-list-symbol:
-      - BTCUSDT
-      - ETHUSDT
-      - SOLUSDT
-      - ADAUSDT
+    kline-white-list-symbol: BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT
 
   huobi:
     url: https://api.huobi.pro/market/tickers

@@ -45,3 +45,35 @@ I have  3 endpoints binance
 - You need to create model, service using restTemplate to raw data.
 - The args of function need to symbol typed String, limit typed int and other fields that you need to re-check if needed.
 
+## Task 2
+- Jump to application folder/port
+- You need to create a new transformer for ticker and refactor KLineBinanceTransformer.
+- You should validate format exception and null pointer exception. If any cases happend, return null, mark @Nullable return
+## Task 3
+- You must add springboot batch.
+- Create a dynamic jobs depended on KLineInterval enumeration and 3 endpoints.
+- For each job, after invoking success, you filter non null, add write data into csv files.
+- You must create parent folder at root folder, named binance data, seperate many children folder, for each folder you must create folder by KLineInterval enumeration, inside those folder, you create 3 file , ticker, kline and depth.
+## Task 4
+- I checked that BinanceBatchJob having errors. You must be fixed that. Notice, You must check datatype before write csv
+
+## Task 5
+- You must remove h2 database.
+- Go to docker-compose.yaml. Start a single mysql server. With username root, and password `abc@123`
+- Add driver mysql and spring data jpa.
+- I found some of batch related to tables were not created.
+
+```Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BATCH_JOB_INSTANCE" not found (this database is empty); SQL statement:
+SELECT JOB_INSTANCE_ID, JOB_NAME
+FROM BATCH_JOB_INSTANCE
+WHERE JOB_NAME = ?
+ and JOB_KEY = ? [42104-232]
+ ```
+- In application.yaml, you must setup aut created if not exist
+### Task 6
+- You need to check the binance-data, the formatted path binance-data/<currentData: DD_MM-YYYY>/<KLineInterval>. You need to change in BinanceDataJob
+## Task 7
+- I need to push this project to docker hub,
+- You must create a dockerFile install gralde and needed libs,
+- Write a publish.sh. to push data hub
+- Named is source data binace, version 1

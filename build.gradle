@@ -26,7 +26,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation("org.apache.commons:commons-lang3:3.18.0")
@@ -42,54 +41,64 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry:2.0.11'
     implementation 'org.springframework:spring-aspects:6.2.3'
 
+    // Spring Batch dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    // Spring Data JPA for database access
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // MySQL driver
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-tasks.register("compileNativeLibrary",Exec) {
-    def sourceDir = "$projectDir/src/main/c"
-    def outputDir = "$projectDir/libs"
-
-
-    def isMacos = System.getProperty("os.name").toLowerCase().contains("mac")
-    def isLinux = System.getProperty("os.name").toLowerCase().contains("nix") || System.getProperty("os.name").toLowerCase().contains("nux")
-    def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-
-    // Cài đặt thư mục làm việc và lệnh build cho từng OS
-    workingDir "$projectDir/src/main/c"
-
-    if (isMacos) {
-        // Lệnh GCC dành cho macOS
-        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}/include", '-I', "${System.getenv('JAVA_HOME')}/include/darwin", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
-    } else if (isLinux) {
-        // Lệnh GCC dành cho Linux
-        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}/include", '-I', "${System.getenv('JAVA_HOME')}/include/linux", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
-    } else if (isWindows) {
-        // Lệnh GCC dành cho Windows (nếu cần)
-        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}\\include", '-I', "${System.getenv('JAVA_HOME')}\\include\\win32", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
-    } else {
-        throw new GradleException("Unsupported operating system: ${System.getProperty('os.name')}")
-    }
-
-    // Đảm bảo thư mục đầu ra tồn tại
-    doFirst {
-        mkdir "$projectDir/libs"
-    }
-
-}
-
-// Thêm bước `compileC` trước khi run ứng dụng
-tasks.withType(JavaExec) {
-    dependsOn compileNativeLibrary
-
-}
+//
+//tasks.register("compileNativeLibrary",Exec) {
+//    def sourceDir = "$projectDir/src/main/c"
+//    def outputDir = "$projectDir/libs"
+//
+//
+//    def isMacos = System.getProperty("os.name").toLowerCase().contains("mac")
+//    def isLinux = System.getProperty("os.name").toLowerCase().contains("nix") || System.getProperty("os.name").toLowerCase().contains("nux")
+//    def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
+//
+//    // Cài đặt thư mục làm việc và lệnh build cho từng OS
+//    workingDir "$projectDir/src/main/c"
+//
+//    if (isMacos) {
+//        // Lệnh GCC dành cho macOS
+//        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}/include", '-I', "${System.getenv('JAVA_HOME')}/include/darwin", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
+//    } else if (isLinux) {
+//        // Lệnh GCC dành cho Linux
+//        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}/include", '-I', "${System.getenv('JAVA_HOME')}/include/linux", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
+//    } else if (isWindows) {
+//        // Lệnh GCC dành cho Windows (nếu cần)
+//        commandLine 'gcc', '-I', "${System.getenv('JAVA_HOME')}\\include", '-I', "${System.getenv('JAVA_HOME')}\\include\\win32", '-shared', '-o', "${projectDir}/libs/libmetricscpu.dylib", '-fPIC', 'metricscpu.c'
+//    } else {
+//        throw new GradleException("Unsupported operating system: ${System.getProperty('os.name')}")
+//    }
+//
+//    // Đảm bảo thư mục đầu ra tồn tại
+//    doFirst {
+//        mkdir "$projectDir/libs"
+//    }
+//
+//}
+//
+//// Thêm bước `compileC` trước khi run ứng dụng
+//tasks.withType(JavaExec) {
+//    dependsOn compileNativeLibrary
+//
+//}
 
 
 bootRun {

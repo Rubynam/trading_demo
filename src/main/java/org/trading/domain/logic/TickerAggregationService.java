@@ -4,6 +4,6 @@ import org.trading.insfrastructure.mapper.BinanceTicker;
 
 public interface TickerAggregationService {
 
-    BinanceTicker craw(String symbol) throws Exception;
+    BinanceTicker craw(String symbol, String interval) throws Exception;
 
 }

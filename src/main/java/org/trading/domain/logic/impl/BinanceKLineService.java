@@ -41,6 +41,7 @@ public class BinanceKLineService implements KLineAggregationService {
         if(httpResponse.getStatusCode().is2xxSuccessful()){
             return httpResponse.getBody();
         }
+        log.error("Binance Kline request failed with status code {} url {}", httpResponse.getStatusCode(),finalUrl);
         throw new Exception("Binance Kline request failed");
     }
 }
