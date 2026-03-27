@@ -183,6 +183,19 @@ services:
       timeout: 5s
       retries: 5
 
+  binance-sink:
+    image: binance-sink
+    container_name: binance-sink
+    ports:
+      - "11080:11080"
+    volumes:
+      - ~/Data/binance-data:/app/binance-data
+    networks:
+      - kafka-network
+    depends_on:
+      - kafka-controller
+      - kafka-broker
+
 networks:
   kafka-network:
     driver: bridge
